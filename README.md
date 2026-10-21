@@ -10,27 +10,34 @@ Live Application: https://agaetistechnologies.netlify.app/
 Frontend: https://github.com/Aashu020/agaetis_Client
 Backend: https://github.com/Aashu020/agaetis-server
 
- Tech Stack
-Frontend
-React
-Vite
-JavaScript
-Axios
-CSS
-Backend
-Node.js
-Express.js
-TypeScript
-REST API
-Database
-PostgreSQL
-Supabase
-Deployment
-Frontend: Netlify
-Backend: Render
-Database: Postgres / Supabase
+** Tech Stack
+Frontend,
+React,
+Vite,
+JavaScript,
+Axios,
+CSS,
 
- Features Implemented
+ *Backend
+Node.js,
+Express.js,
+TypeScript,
+REST API,
+
+ *Database
+PostgreSQL,
+Supabase,
+
+ *Deployment
+Frontend: Netlify,
+Backend: Render
+
+Database: Postgres (used:Supabase. -PgAdmin was locked beacause of the last candidate so used supabase for less time consumption)
+
+
+
+** Features Implemented
+
 Employee Management: Retrieve, create, update, and delete employee records.
 Search Functionality: Filter employees by name.
 Pagination: Display employee records in manageable pages as the list grows.
@@ -40,8 +47,8 @@ Input Validation: Validate employee details before processing requests.
 Error Handling: Handle invalid inputs and API/database errors.
 Database Integration: Store and retrieve employee records using PostgreSQL through Supabase.
 
- Project Structure
-Frontend
+ **Project Structure
+*Frontend
 agaetis_Client/
 ├── src/
 │   ├── components/
@@ -67,11 +74,9 @@ agaetis-server/
 
 Note: The directory structures above are illustrative. Actual files and folders may differ.
 
- Getting Started
+ **Getting Started
 
 Follow these steps to run the frontend and backend locally.
-
-Prerequisites
 
 Make sure you have installed:
 
@@ -106,7 +111,7 @@ Add your Supabase/database credentials and other required settings using the var
 
 For the frontend, create a .env file in the frontend directory:
 
-VITE_API_URL=http://localhost:5000/api or live one https://agaetis-server.onrender.com
+VITE_API_URL=http://localhost:5000/api for live VITE_API_URL=https://agaetis-server.onrender.com/api
 
 
 For local development, this assumes your backend runs on port 5000 and exposes employee routes under /api. Adjust the URL if your configuration differs.
@@ -136,7 +141,7 @@ http://localhost:5173
 
 Open the URL shown in your terminal to access the application.
 
-🔌 API Overview
+** API Overview
 
 The backend exposes REST API endpoints for employee management.
 
@@ -154,7 +159,7 @@ The employee listing endpoint supports query parameters such as:
 
 The exact routes depend on the backend's Express route configuration.
 
- Database
+ **Database
 
 The application uses PostgreSQL hosted on Supabase.
 
@@ -162,19 +167,14 @@ Supabase was used because the previously available database access was locked by
 
 Database credentials and connection settings should be stored securely in environment variables rather than committed to the repository.
 
- Deployment
+ **Deployment
 Frontend: Deployed on Netlify.
 Backend: Deployed on Render.
 Database: Hosted on Supabase.
 
 The frontend communicates with the deployed backend through its API URL.
 
- Author
-
+ **Author
 Asif Nadaf
-
 GitHub: https://github.com/Aashu020
 
- License
-
-This project is available for review and evaluation. Add a formal license if you intend to distribute or reuse the code publicly.
