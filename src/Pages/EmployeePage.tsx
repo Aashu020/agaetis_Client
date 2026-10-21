@@ -1,7 +1,12 @@
-
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Users, UserPlus, RefreshCw } from "lucide-react";
+import {
+  Users,
+  UserPlus,
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import Header from "../components/layout/Header";
 import Alert from "../components/employees/Alert";
@@ -147,14 +152,17 @@ export default function EmployeePage() {
     }
   };
 
+  const rangeStart = totalEmployees === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const rangeEnd = Math.min(currentPage * pageSize, totalEmployees);
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <Header />
 
-      <main className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 sm:py-10 lg:px-[6%]">
+      <main className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 sm:py-10 lg:px-[6%]">
         {/* Page heading */}
-        <section className="mb-8 flex items-center justify-between gap-4">
-          <div>
+        <section className="mb-6 flex items-start justify-between gap-4 sm:mb-8 sm:items-center">
+          <div className="min-w-0">
             <span className="text-xs font-bold tracking-widest text-indigo-600">
               WORKSPACE / DIRECTORY
             </span>
@@ -172,12 +180,10 @@ export default function EmployeePage() {
             type="button"
             onClick={() => void fetchEmployees()}
             disabled={loading}
+            aria-label="Refresh employees"
             className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
           >
-            <RefreshCw
-              size={16}
-              className={loading ? "animate-spin" : ""}
-            />
+            <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
         </section>
@@ -194,30 +200,32 @@ export default function EmployeePage() {
         )}
 
         {/* Statistics */}
-        <section className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-              <Users size={23} />
+        <section className="mb-6 grid grid-cols-2 gap-3 sm:mb-7 sm:gap-4">
+          <div className="flex min-w-0 items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:gap-4 sm:p-5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 sm:h-12 sm:w-12">
+              <Users size={22} />
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500">Total Employees</p>
-              <h2 className="mt-1 text-2xl font-bold">
+            <div className="min-w-0">
+              <p className="truncate text-xs text-gray-500 sm:text-sm">
+                Total Employees
+              </p>
+              <h2 className="mt-1 text-xl font-bold sm:text-2xl">
                 {totalEmployees}
               </h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-              <UserPlus size={23} />
+          <div className="flex min-w-0 items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:gap-4 sm:p-5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 sm:h-12 sm:w-12">
+              <UserPlus size={22} />
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500">
+            <div className="min-w-0">
+              <p className="truncate text-xs text-gray-500 sm:text-sm">
                 Matching Employees
               </p>
-              <h2 className="mt-1 text-2xl font-bold">
+              <h2 className="mt-1 text-xl font-bold sm:text-2xl">
                 {totalEmployees}
               </h2>
             </div>
@@ -232,9 +240,14 @@ export default function EmployeePage() {
             onCancel={() => setEditingEmployee(null)}
           />
 
-          <section className="min-w-0 rounded-xl border border-gray-200 bg-white shadow-sm h-[80vh] overflow-y-auto" style={{scrollbarWidth:"none"}}>
-            <div className="flex items-center justify-between gap-3 px-5 py-5 sm:px-6">
-              <div>
+          {/*
+            Fixed-height card: header + search stay on top, only the list
+            scrolls, and the pagination bar is pinned to the bottom.
+          */}
+          <section className="flex h-[85vh] min-h-[520px] min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm lg:h-[80vh]">
+            {/* Card header */}
+            <div className="flex shrink-0 items-start justify-between gap-3 px-4 py-4 sm:items-center sm:px-6 sm:py-5">
+              <div className="min-w-0">
                 <h3 className="text-lg font-bold text-gray-900">
                   Team Members
                 </h3>
@@ -243,39 +256,46 @@ export default function EmployeePage() {
                 </p>
               </div>
 
-              <span className="rounded-full bg-indigo-50 px-3 py-1.5 text-sm font-semibold text-indigo-700">
+              <span className="shrink-0 rounded-full bg-indigo-50 px-3 py-1.5 text-sm font-semibold text-indigo-700">
                 {totalEmployees}
               </span>
             </div>
 
-            <EmployeeSearch
-              value={search}
-              onChange={(value) => {
-                setCurrentPage(1);
-                setSearch(value);
-              }}
-            />
+            {/* Search */}
+            <div className="shrink-0">
+              <EmployeeSearch
+                value={search}
+                onChange={(value) => {
+                  setCurrentPage(1);
+                  setSearch(value);
+                }}
+              />
+            </div>
 
-            <EmployeeTable
-              employees={employees}
-              onEdit={setEditingEmployee}
-              onDelete={handleDelete}
-              loading={loading}
-            />
+            {/* Scrollable list */}
+            <div
+              className="min-h-0 flex-1 overflow-auto"
+              style={{ scrollbarWidth: "thin" }}
+            >
+              <EmployeeTable
+                employees={employees}
+                onEdit={setEditingEmployee}
+                onDelete={handleDelete}
+                loading={loading}
+              />
+            </div>
 
-            {!loading && totalEmployees > 0 && (
-              <div className="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ">
-                <p className="text-sm text-gray-500">
+            {/* Pagination, always pinned to the bottom */}
+            {totalEmployees > 0 && (
+              <div className="flex shrink-0 flex-col gap-3 border-t border-gray-100 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+                <p className="order-2 text-center text-sm text-gray-500 sm:order-1 sm:text-left">
                   Showing{" "}
                   <span className="font-semibold text-gray-800">
-                    {(currentPage - 1) * pageSize + 1}
+                    {rangeStart}
                   </span>
                   {"–"}
                   <span className="font-semibold text-gray-800">
-                    {Math.min(
-                      currentPage * pageSize,
-                      totalEmployees
-                    )}
+                    {rangeEnd}
                   </span>
                   {" of "}
                   <span className="font-semibold text-gray-800">
@@ -284,20 +304,22 @@ export default function EmployeePage() {
                   employees
                 </p>
 
-                <div className="flex items-center gap-2">
+                <div className="order-1 flex items-center justify-between gap-2 sm:order-2 sm:justify-end">
                   <button
                     type="button"
                     onClick={() =>
                       setCurrentPage((page) => Math.max(1, page - 1))
                     }
-                    disabled={currentPage <= 1}
-                    className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled={currentPage <= 1 || loading}
+                    aria-label="Previous page"
+                    className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Previous
+                    <ChevronLeft size={16} />
+                    <span>Previous</span>
                   </button>
 
-                  <span className="whitespace-nowrap px-2 text-sm font-medium text-gray-700">
-                    Page {currentPage} of {totalPages}
+                  <span className="whitespace-nowrap rounded-lg bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700">
+                    {currentPage} / {Math.max(1, totalPages)}
                   </span>
 
                   <button
@@ -307,10 +329,12 @@ export default function EmployeePage() {
                         Math.min(totalPages, page + 1)
                       )
                     }
-                    disabled={currentPage >= totalPages}
-                    className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled={currentPage >= totalPages || loading}
+                    aria-label="Next page"
+                    className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Next
+                    <span>Next</span>
+                    <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
